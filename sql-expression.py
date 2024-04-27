@@ -20,6 +20,7 @@ album_table = Table(
     Column("album_id", Integer, primary_key=True),
     Column("title", String),
     Column("artist_id", Integer, ForeignKey(artist_table.c.artist_id))
+    # the .c attribute is needed when referencing a column from another table within the ForeignKey definition
 )
 
 # create variable for "track" table
@@ -40,7 +41,22 @@ track_table = Table(
 with db.connect() as connection:
 
     # Query 1 - select all records from the "artist" table
-    select_query = artist_table.select()
+    # select_query = artist_table.select()
+
+    # Query 2 - select only the "name" column from the "artist" table
+    # select_query = artist_table.select().with_only_columns([artist_table.c.name])
+
+    # Query 3 - select only the "name" column from the "artist" table
+    # select_query = artist_table.select().where(artist_table.c.name == "Queen")
+
+    # Query 4 - select only by "artist_id" #51 from the "artist" table
+    # select_query = artist_table.select().where(artist_table.c.artist_id == 51)
+
+    # Query 5 - select only the albums with "artist_id" #51 on the "album" table
+    # select_query = album_table.select().where(album_table.c.artist_id == 51)
+
+    # Query 6 - select all tracks where the composer is "Queen" from the "Track" table
+    # select_query = track_table.select().where(track_table.c.composer == "Queen")
 
     results = connection.execute(select_query)
     for result in results:
