@@ -73,20 +73,78 @@
 ### Create a new file called "sql-expression.py"
 - `touch sql-expression.py`
 
-### Query 1 - select all records from the "Artist" table
+### Query 1 - select all records from the "artist" table
 - `select_query = artist_table.select()`
 
-### Query 2 - select only the "Name" column from the "Artist" table
-- `select_query = artist_table.select().with_only_columns([artist_table.c.Name])`
+### Query 2 - select only the "name" column from the "artist" table
+- `select_query = artist_table.select().with_only_columns([artist_table.c.name])`
 
-### Query 3 - select only 'Queen' from the "Artist" table
-- `select_query = artist_table.select().where(artist_table.c.Name == "Queen")`
+### Query 3 - select only 'Queen' from the "artist" table
+- `select_query = artist_table.select().where(artist_table.c.name == "Queen")`
 
-### Query 4 - select only by 'ArtistId' #51 from the "Artist" table
-- `select_query = artist_table.select().where(artist_table.c.ArtistId == 51)`
+### Query 4 - select only by 'artist_id' #51 from the "artist" table
+- `select_query = artist_table.select().where(artist_table.c.artist_id == 51)`
 
-### Query 5 - select only the albums with 'ArtistId' #51 on the "Album" table
-- `select_query = album_table.select().where(album_table.c.ArtistId == 51)`
+### Query 5 - select only the albums with 'artist_id' #51 on the "album" table
+- `select_query = album_table.select().where(album_table.c.artist_id == 51)`
 
-### Query 6 - select all tracks where the composer is 'Queen' from the "Track" table
-- `select_query = track_table.select().where(track_table.c.Composer == "Queen")`
+### Query 6 - select all tracks where the composer is 'Queen' from the "track" table
+- `select_query = track_table.select().where(track_table.c.composer == "Queen")`
+
+---
+
+# 06 - Introducing Class-Based Models
+
+### Create a new file called "sql-orm.py"
+- `touch sql-orm.py`
+
+### Query 1 - select all records from the "artist" table
+```python
+artists = session.query(artist)
+for artist in artists:
+    print(artist.artist_id, artist.name, sep=" | ")
+```
+
+### Query 2 - select only the "Name" column from the "artist" table
+```python
+artists = session.query(artist)
+for artist in artists:
+    print(artist.name)
+```
+
+### Query 3 - select only "Queen" from the "artist" table
+```python
+artist = session.query(artist).filter_by(name="Queen").first()
+print(artist.artist_id, artist.name, sep=" | ")
+```
+
+### Query 4 - select only by "artist_id" #51 from the "artist" table
+```python
+artist = session.query(artist).filter_by(artist_id=51).first()
+print(artist.artist_id, artist.name, sep=" | ")
+```
+
+### Query 5 - select only the albums with "ArtistId" #51 on the "Album" table
+```python
+albums = session.query(album).filter_by(artist_id=51)
+for album in albums:
+    print(album.album_id, album.title, album.artist_id, sep=" | ")
+```
+
+### Query 6 - select all tracks where the composer is "Queen" from the "Track" table
+```python
+tracks = session.query(track).filter_by(composer="Queen")
+for track in tracks:
+    print(
+        track.track_id,
+        track.name,
+        track.album_id,
+        track.media_type_id,
+        track.genreId,
+        track.composer,
+        track.milliseconds,
+        track.bytes,
+        track.unit_price,
+        sep=" | "
+    )
+```
